@@ -16,10 +16,10 @@ API service methods:
 
 ### Add Migration Query
 ```
-dotnet ef migrations add InitDatabase --project "src\Core\E_Wallet.EntityFramework" -s "src\API\E_Wallet.WebApi" -c AppDbContext --verbose
+dotnet ef migrations add InitDatabase --project "src\Core\E_Wallet.EntityFramework" -s "src\API\E_Wallet.WebApi" -c AppDbContext
 ```
 
 ### Update Database Query
 ```
-dotnet ef database update --project "src\Core\E_Wallet.EntityFramework" -s "src\API\E_Wallet.WebApi" -c AppDbContext --verbose
+dotnet ef database update --project "src\Core\E_Wallet.EntityFramework" -s "src\API\E_Wallet.WebApi" -c AppDbContext
 ```
