@@ -14,12 +14,38 @@ API service methods:
 3. Get the total number and amount of recharge operations for the current month.
 4. Get the e-wallet balance.
 
-### Add Migration Query
+# So let's get started.
+
+### You must have [.NET 6 SDK.](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+
+### 1  Clone this repository
 ```
-dotnet ef migrations add InitDatabase --project "src\Core\E_Wallet.EntityFramework" -s "src\API\E_Wallet.WebApi" -c AppDbContext
+git clone https://github.com/futuricon/E_Wallet.git
 ```
 
-### Update Database Query
+### 2  Update Database
 ```
-dotnet ef database update --project "src\Core\E_Wallet.EntityFramework" -s "src\API\E_Wallet.WebApi" -c AppDbContext
+cd E-Wallet/src
+dotnet ef database update --project "Core\E_Wallet.EntityFramework" -s "Core\E_Wallet.DbMigrator" -c AppDbContext
+```
+
+### 3  Seed default data to DB
+```
+dotnet run --project Core/E_Wallet.DbMigrator
+```
+
+### 4  Run the Web API 
+```
+dotnet run --project API/E_Wallet.WebApi
+```
+
+### 5  Run simple client app
+```
+dotnet run --project Apps/E_Wallet.SimpleClientApp
+```
+## That's all :/
+#
+#### 'Add Migration' Query just in case
+```
+dotnet ef migrations add InitDatabase --project "src\Core\E_Wallet.EntityFramework" -s "src\Core\E_Wallet.DbMigrator" -c AppDbContext
 ```
