@@ -4,7 +4,7 @@ internal class UserProfile : Profile
 {
     public UserProfile()
     {
-        CreateMap<User, CreateUserCommand>().ReverseMap();
-        CreateMap<UserDto, CreateUserCommand>().ReverseMap();
+        //CreateMap<User, CreateUserCommand>().ReverseMap();
+        //CreateMap<UserDto, CreateUserCommand>().ReverseMap();
     }
 }

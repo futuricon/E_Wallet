@@ -1,28 +1,19 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using E_Wallet.EntityFramework.Repositories;
-using E_Wallet.EntityFramework.Helpers;
+using Microsoft.Extensions.Configuration;
 
 namespace E_Wallet.EntityFramework;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddInfrastructureLayer(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        string connectionStringName = "Local")
-        //,string tenantsConfigSection = "TenantsConfig")
+    public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString(connectionStringName);
-        //var tenantsSettings = configuration.GetSection(tenantsConfigSection).Get<TenantsSettings>();
+        var connectionString = configuration.GetConnectionString("DbConnection");
 
-        //if (tenantsSettings is { DatabaseProvider: "mysql" })
-        //{
-        //    services.AddScoped<IDatabaseProviderService, MySqlProviderService>();
-        //    services.AddSingleton(tenantsSettings);
-        //}
-
-        services.AddDbContext<AppDbContext>(o => DbContextHelpers.ConfigureMySql(connectionString, o));
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseSqlServer(connectionString).UseLazyLoadingProxies();
+        });
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));

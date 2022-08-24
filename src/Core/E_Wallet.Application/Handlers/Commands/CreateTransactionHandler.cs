@@ -21,10 +21,10 @@ internal sealed class CreateTransactionHandler : RequestHandlerBase<CreateTransa
     protected override async Task<DataResult<decimal>> HandleValidated(
         CreateTransactionCommand request, CancellationToken cancellationToken)
     {
-        //var user = await _userRepository.GetAsync(request.UserId!);
+        var user = await _userRepository.GetAsync(request.UserId!);
 
-        //if (user == null)
-            //return DataResult<decimal>.CreateError("Could not find the specified user");
+        if (user == null)
+            return DataResult<decimal>.CreateError("Could not find the specified user");
 
         var wallet = await _walletRepository.GetAsync(request.WalletId!);
 
@@ -33,7 +33,7 @@ internal sealed class CreateTransactionHandler : RequestHandlerBase<CreateTransa
 
         var transactionEntity = new Transaction
         {
-            //User = user,
+            User = user,
             Wallet = wallet,
             Amount = request.Amount,
             TransactionTypeId = request.TransactionTypeId
@@ -42,17 +42,17 @@ internal sealed class CreateTransactionHandler : RequestHandlerBase<CreateTransa
         var currentBalance = wallet.Balance + transactionEntity.Amount;
 
         //gotta get it out of here
-        //if (transactionEntity.TransactionTypeId == (int)TransactionTypes.Replanish && 
-        //    ((currentBalance > 100000m && user.IsIdentified == true) || 
-        //    (currentBalance > 10000m && user.IsIdentified == false)))
-        //{
-        //    return DataResult<decimal>.CreateError("Balance limit exceeded");
-        //}
-        //else if (transactionEntity.TransactionTypeId == (int)TransactionTypes.Withdraw && 
-        //    (wallet.Balance - transactionEntity.Amount) < 0m)
-        //{
-        //    return DataResult<decimal>.CreateError("Insufficient funds on the balance");
-        //}
+        if (transactionEntity.TransactionTypeId == (int)TransactionTypes.Replanish && 
+            ((currentBalance > 100000m && user.IsIdentified == true) || 
+            (currentBalance > 10000m && user.IsIdentified == false)))
+        {
+            return DataResult<decimal>.CreateError("Balance limit exceeded");
+        }
+        else if (transactionEntity.TransactionTypeId == (int)TransactionTypes.Withdraw && 
+            (wallet.Balance - transactionEntity.Amount) < 0m)
+        {
+            return DataResult<decimal>.CreateError("Insufficient funds on the balance");
+        }
 
         await _transactionRepository.AddAsync(transactionEntity);
         await _transactionRepository.UnitOfWork.CommitAsync();
@@ -63,11 +63,11 @@ internal sealed class CreateTransactionHandler : RequestHandlerBase<CreateTransa
     {
         errorDescription = string.Empty;
 
-        //if (string.IsNullOrEmpty(request.UserId))
-        //{
-        //    errorDescription = "UserId is an empty string";
-        //}
-        if (string.IsNullOrEmpty(request.WalletId))
+        if (string.IsNullOrEmpty(request.UserId))
+        {
+            errorDescription = "UserId is an empty string";
+        }
+        else if (string.IsNullOrEmpty(request.WalletId))
         {
             errorDescription = "WalletId is an empty string";
         }

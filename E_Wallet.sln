@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Wallet.Domain.Shared", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Wallet.EntityFramework", "src\Core\E_Wallet.EntityFramework\E_Wallet.EntityFramework.csproj", "{52DFB666-3FD4-4155-9BD2-D7562D0B9006}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E_Wallet.SimpleClientApp", "src\Apps\E_Wallet.SimpleClientApp\E_Wallet.SimpleClientApp.csproj", "{AE38AB63-5C7E-42E2-BDB4-845136F200C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E_Wallet.DbMigrator", "src\Core\E_Wallet.DbMigrator\E_Wallet.DbMigrator.csproj", "{C7A46FA1-C0BB-4CB6-8C90-2F8851C20D11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +63,14 @@ Global
 		{52DFB666-3FD4-4155-9BD2-D7562D0B9006}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52DFB666-3FD4-4155-9BD2-D7562D0B9006}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52DFB666-3FD4-4155-9BD2-D7562D0B9006}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE38AB63-5C7E-42E2-BDB4-845136F200C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE38AB63-5C7E-42E2-BDB4-845136F200C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE38AB63-5C7E-42E2-BDB4-845136F200C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE38AB63-5C7E-42E2-BDB4-845136F200C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7A46FA1-C0BB-4CB6-8C90-2F8851C20D11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7A46FA1-C0BB-4CB6-8C90-2F8851C20D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7A46FA1-C0BB-4CB6-8C90-2F8851C20D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7A46FA1-C0BB-4CB6-8C90-2F8851C20D11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +83,8 @@ Global
 		{5089E0A9-03E1-41DB-A26C-007D970FC871} = {A9D60450-13FC-4D5A-91D0-AF6A615D3A16}
 		{D63AEC11-E78D-4AF6-B081-0BC5FDAF4758} = {A9D60450-13FC-4D5A-91D0-AF6A615D3A16}
 		{52DFB666-3FD4-4155-9BD2-D7562D0B9006} = {A9D60450-13FC-4D5A-91D0-AF6A615D3A16}
+		{AE38AB63-5C7E-42E2-BDB4-845136F200C2} = {619867AC-287F-40B4-A7F9-3D81ED3B3B1E}
+		{C7A46FA1-C0BB-4CB6-8C90-2F8851C20D11} = {A9D60450-13FC-4D5A-91D0-AF6A615D3A16}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50CE0CAD-5B57-469B-BC36-D6D083D35BB7}

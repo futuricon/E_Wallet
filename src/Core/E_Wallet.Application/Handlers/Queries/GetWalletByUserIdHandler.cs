@@ -16,15 +16,15 @@ internal sealed class GetWalletByUserIdHandler : RequestHandlerBase<GetWalletByU
         protected override async Task<DataResult<WalletDto>> HandleValidated(GetWalletByUserIdQuery request, CancellationToken cancellationToken)
         {
             var userEntity = await _userRepository.GetAsync(i => i.Id == request.UserId);
-
+            
             if (userEntity == null)
                 return DataResult<WalletDto>.CreateError("Could not find the specified user");
-
+            
             var walletEntity = await _walletRepository.GetAsync(i => i.UserId == userEntity.Id);
-
+            
             if (walletEntity == null)
                 return DataResult<WalletDto>.CreateError("the user does not have an e-wallet");
-
+            
             var wallet = new WalletDto
             {
                 Id = walletEntity.Id,

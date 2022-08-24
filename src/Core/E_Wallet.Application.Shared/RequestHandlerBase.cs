@@ -26,5 +26,4 @@ public abstract class RequestHandlerBase<TRequest, TResponse> : IRequestHandler<
 
     protected abstract Task<TResponse> HandleValidated(TRequest request, CancellationToken cancellationToken);
     protected abstract bool Validate(TRequest request, out string errorDescription);
-    //protected abstract bool HMACAuthentication(TRequest request, out string errorDescription);
 }

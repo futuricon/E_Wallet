@@ -11,7 +11,7 @@ namespace E_Wallet.Application
             {
                 o.AddProfile<TransactionProfile>();
                 o.AddProfile<WalletProfile>();
-                o.AddProfile<UserProfile>();
+                //o.AddProfile<UserProfile>();
             });
 
             services.AddMediatR(typeof(ServiceCollectionExtensions).Assembly);

@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using E_Wallet.Application;
 using E_Wallet.EntityFramework;
+using E_Wallet.WebApi.Filters;
 
 namespace E_Wallet.WebApi;
 
@@ -10,27 +10,14 @@ internal static class HostingExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        AddSecretsJson(builder.Configuration);
+        //AddSecretsJson(builder.Configuration);
         builder.Services.AddApplicationLayer();
-        //builder.Services.AddTenantApplicationLayer();
-        //builder.Services.AddSharedApplicationLayer(builder.Configuration, "EmailConfig");
-        builder.Services.AddInfrastructureLayer(builder.Configuration, "LocalMainDatabase");
+        builder.Services.AddInfrastructureLayer(builder.Configuration);
         builder.Services.AddHttpContextAccessor();
-
-        //builder.Services.AddAuthentication("Bearer")
-            //.AddJwtBearer("Bearer", options =>
-            //{
-                //builder.Configuration.Bind("IdentityServer", options);
-                //options.TokenValidationParameters.ValidateAudience = true;
-            //});
 
         //builder.Services.AddControllers(configure =>
         //{
-            //var policy = new AuthorizationPolicyBuilder()
-            //                .RequireAuthenticatedUser()
-            //                .Build();
-
-            //configure.Filters.Add(new AuthorizeFilter(policy));
+        //    configure.Filters.Add(HMACAuthorizationAttribute);
         //})
         builder.Services.AddControllers()
         .ConfigureApiBehaviorOptions(options =>
@@ -39,68 +26,11 @@ internal static class HostingExtensions
                 new BadRequestObjectResult(DataResult.CreateError(GetModelStateErrors(context.ModelState)));
         });
 
-        //builder.Services.AddAuthorization(options =>
+        //builder.Services.AddDbContext<AppDbContext>(options =>
         //{
-            //options.AddPolicy(Policies.Load.CanRead, policy =>
-            //{
-            //    policy.Requirements.Add(new LoadCanReadRequirement());
-            //});
-            //options.AddPolicy(Policies.Load.CanWrite, policy =>
-            //{
-            //    policy.Requirements.Add(new LoadCanWriteRequirement());
-            //});
-            //options.AddPolicy(Policies.Employee.CanRead, policy =>
-            //{
-            //    policy.Requirements.Add(new EmployeeCanReadRequirement());
-            //});
-            //options.AddPolicy(Policies.Employee.CanWrite, policy =>
-            //{
-            //    policy.Requirements.Add(new EmployeeCanWriteRequirement());
-            //});
-            //options.AddPolicy(Policies.Truck.CanRead, policy =>
-            //{
-            //    policy.Requirements.Add(new TruckCanReadRequirement());
-            //});
-            //options.AddPolicy(Policies.Truck.CanWrite, policy =>
-            //{
-            //    policy.Requirements.Add(new TruckCanWriteRequirement());
-            //});
-            //options.AddPolicy(Policies.Tenant.CanRead, policy =>
-            //{
-            //    policy.Requirements.Add(new TenantCanReadRequirement());
-            //});
-            //options.AddPolicy(Policies.Tenant.CanReadDisplayNameOnly, policy =>
-            //{
-            //    policy.Requirements.Add(new TenantCanReadDisplayNameOnlyRequirement());
-            //});
-            //options.AddPolicy(Policies.Tenant.CanWrite, policy =>
-            //{
-            //    policy.Requirements.Add(new TenantCanWriteRequirement());
-            //});
-            //options.AddPolicy(Policies.User.CanRead, policy =>
-            //{
-            //    policy.Requirements.Add(new UserCanReadRequirement());
-            //});
-            //options.AddPolicy(Policies.User.CanWrite, policy =>
-            //{
-            //    policy.Requirements.Add(new UserCanWriteRequirement());
-            //});
+        //    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")).UseLazyLoadingProxies();
         //});
-
-        //builder.Services.AddSingleton<IAuthorizationHandler, LoadCanReadHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, LoadCanWriteHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, EmployeeCanReadHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, EmployeeCanWriteHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, TruckCanReadHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, TruckCanWriteHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, TenantCanReadHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, TenantCanReadDisplayNameOnlyHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, TenantCanWriteHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, UserCanReadHandler>();
-        //builder.Services.AddSingleton<IAuthorizationHandler, UserCanWriteHandler>();
-        
-        //builder.Services.AddScoped<HMACAuthenticationAttribute>();
-        builder.Services.AddSingleton<IMediator, Mediator>();
+        builder.Services.AddScoped<HMACAuthorizationAttribute>();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         return builder.Build();
@@ -125,17 +55,17 @@ internal static class HostingExtensions
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
-        //app.UseAuthorization();
+        app.UseAuthorization();
 
         app.MapControllers();
         return app;
     }
 
-    private static void AddSecretsJson(IConfigurationBuilder configuration)
-    {
-        var path = Path.Combine(AppContext.BaseDirectory, "secrets.json");
-        configuration.AddJsonFile(path, true);
-    }
+    //private static void AddSecretsJson(IConfigurationBuilder configuration)
+    //{
+    //    var path = Path.Combine(AppContext.BaseDirectory, "secrets.json");
+    //    configuration.AddJsonFile(path, true);
+    //}
 
     private static string GetModelStateErrors(ModelStateDictionary modelState)
     {

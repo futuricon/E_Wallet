@@ -1,27 +1,28 @@
-﻿namespace E_Wallet.WebApi.Controllers;
+﻿using E_Wallet.WebApi.Filters;
+
+namespace E_Wallet.WebApi.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+//[HMACAuthorization]
+[ServiceFilter(typeof(HMACAuthorizationAttribute))]
 public class TransactionController : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
     public TransactionController(
-        IMapper mapper,
         IMediator mediator)
     {
-        _mapper = mapper;
         _mediator = mediator;
     }
 
     [HttpPost("monthlyTansactions")]
-    //[TypeFilter(typeof(HMACAuthenticationAttribute))]
-    //[HMACAuthentication]
-    //[ProducesResponseType(typeof(PagedDataResult<LoadDto>), StatusCodes.Status200OK)]
+    //[ServiceFilter(typeof(HMACAuthorizationAttribute))]
+    //[ProducesResponseType(typeof(DataResult<LoadDto>), StatusCodes.Status200OK)]
     //[ProducesResponseType(typeof(DataResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetMonthlyTansactions([FromHeader] HeadersParameters parameters, [FromBody] GetTransactionsQuery request)
+    public async Task<IActionResult> GetMonthlyTansactions([FromHeader] HeaderParams headerParams, [FromBody] GetTransactionsQuery request)
     {
+        request.SetData(headerParams.XUserId);
         var result = await _mediator.Send(request);
 
         if (result.Success)
@@ -31,12 +32,12 @@ public class TransactionController : ControllerBase
     }
 
     [HttpPost("replenish")]
-    //[ServiceFilter(typeof(HMACAuthenticationAttribute))]
     //[ProducesResponseType(typeof(DataResult), StatusCodes.Status200OK)]
     //[ProducesResponseType(typeof(DataResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create([FromBody] TransactionDto request)
+    public async Task<IActionResult> Create([FromHeader] HeaderParams headerParams, [FromBody] CreateTransactionCommand request)
     {
-        var resultTransaction = await _mediator.Send(_mapper.Map<CreateTransactionCommand>(request));
+        request.SetData(headerParams.XUserId);
+        var resultTransaction = await _mediator.Send(request);
 
         if (!resultTransaction.Success)
             return BadRequest(resultTransaction);
@@ -44,7 +45,6 @@ public class TransactionController : ControllerBase
         var resultWallet = await _mediator.Send(new UpdateWalletCommand
         {
             Id = request.WalletId,
-            UserId = request.UserId,
             Balance = resultTransaction.Value
         });
 

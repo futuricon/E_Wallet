@@ -3,7 +3,6 @@
 public class User : IAggregateRoot
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
-    public string? AppId { get; set; }
     public string? APIKey { get; set; }
     public string UserName { get; set; } = default!;
     public bool IsIdentified { get; set; }

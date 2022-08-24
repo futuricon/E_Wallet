@@ -1,30 +1,28 @@
-﻿namespace E_Wallet.WebApi.Controllers;
+﻿using E_Wallet.WebApi.Filters;
+
+namespace E_Wallet.WebApi.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+//[HMACAuthorization]
+[ServiceFilter(typeof(HMACAuthorizationAttribute))]
 public class WalletController : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
     public WalletController(
-        IMapper mapper,
         IMediator mediator)
     {
-        _mapper = mapper;
         _mediator = mediator;
     }
 
     [HttpPost("balance")]
-    //[ServiceFilter(typeof(HMACAuthenticationAttribute))]
     //[ProducesResponseType(typeof(DataResult<decimal>), StatusCodes.Status200OK)]
     //[ProducesResponseType(typeof(DataResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetBalanceById([FromBody] string id)
+    public async Task<IActionResult> GetBalanceById([FromHeader] HeaderParams headerParams, [FromBody] GetWalletBalanceByIdQuery request)
     {
-        var result = await _mediator.Send(new GetWalletBalanceByIdQuery
-        {
-            Id = id
-        });
+        request.SetData(headerParams.XUserId);
+        var result = await _mediator.Send(request);
 
         if (result.Success)
             return Ok(result);
@@ -33,21 +31,15 @@ public class WalletController : ControllerBase
     }
 
     [HttpPost("walletExists")]
-    //[ServiceFilter(typeof(HMACAuthenticationAttribute))]
     //[ProducesResponseType(typeof(DataResult<WalletDto>), StatusCodes.Status200OK)]
     //[ProducesResponseType(typeof(DataResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetWalletByUserId([FromBody] string id)
+    public async Task<IActionResult> GetWalletByUserId([FromHeader] HeaderParams headerParams, [FromBody] GetWalletByUserIdQuery request)
     {
-        var result = await _mediator.Send(new GetWalletByUserIdQuery
-        {
-            UserId = id
-        });
+        request.SetData(headerParams.XUserId);
+        var result = await _mediator.Send(request);
 
         if (result.Success)
-        {
-
             return Ok(result);
-        }
 
         return BadRequest(result);
     }
